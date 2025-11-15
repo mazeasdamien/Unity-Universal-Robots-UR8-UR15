@@ -79,7 +79,7 @@
         <script src="Build/Unity-Universal-Robots-UR8-UR15.loader.js"></script>
         <script>
             const progressBar = document.querySelector("#progress");
-            createUnityInstance(document.querySelector("#unity-canvas"), {
+            const unityPromise = createUnityInstance(document.querySelector("#unity-canvas"), {
                 arguments: [],
                 dataUrl: "Build/Unity-Universal-Robots-UR8-UR15.data",
                 frameworkUrl: "Build/Unity-Universal-Robots-UR8-UR15.framework.js",
@@ -90,7 +90,11 @@
                 productVersion: "1",
             }, (progress) => {
                 progressBar.style.width = progress * 100 + '%';
-            }).then((unityInstance) => {
+            });
+
+            const minTimePromise = new Promise(resolve => setTimeout(resolve, 2000));
+
+            Promise.all([unityPromise, minTimePromise]).then(([unityInstance]) => {
                 document.querySelector("#loading-overlay").style.display = "none";
             }).catch((message) => {
                 console.error(message);
